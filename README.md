@@ -27,7 +27,7 @@ To use this plugin you must add `fcontacts` as a [dependency in your `pubspec.ya
 
 ```yaml
 dependencies:
-    fcontacts: ^0.0.1
+    fcontacts: ^0.0.2
 ```
 
 ### Example
@@ -41,6 +41,27 @@ Listing all the contacts in your device:
 ```dart
 List<FContact> allContacts = await FContacts.all();
 ```
+
+Listing contacts filtered by a query string:
+
+```dart
+List<FContact> filteredContacts = await FContacts.list( query: "abc" );
+// The fields used to filter are:
+//  - identifier
+//  - displayName
+//  - nickname
+//  - jobTitle
+//  - departmentName
+//  - organizationName
+//  - note
+//  - postalAddresses (street, city, subLocality, subAdministrativeArea, postalCode, state, country)
+//  - emails
+//  - urls
+//  - phoneNumbers
+//  - socialProfiles (service, userIdentifier, username, url)
+//  - contactRelations
+//  - instantMessageAddresses (service, username)
+````
 
 ### Models
 
@@ -71,7 +92,7 @@ class FContact {
     String note;                            // Only in Android
     Uint8List image;
     Uint8List thumbnail;
-    
+
     List<FContactDateLabeled> dates;
     List<FContactPostalAddressLabeled> postalAddresses;
     List<FContactValueLabeled> emails;
@@ -80,7 +101,7 @@ class FContact {
     List<FContactSocialProfileLabeled> socialProfiles;                      // Only in iOS
     List<FContactValueLabeled> contactRelations;
     List<FContactInstantMessageAddressLabeled> instantMessageAddresses;
-    
+
 }
 ```
 
@@ -146,7 +167,6 @@ class FContactInstantMessageAddressLabeled {
 
 ## Limitations
 
-- Only retrieving the list of all contacts is available for now. In future query methods will be available, too.
 - The **Notes** field in iOS is not available for now.
 
 ## Credits

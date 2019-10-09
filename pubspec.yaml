@@ -1,6 +1,6 @@
 name: fcontacts
 description: A Flutter plugin for accessing to all available data from your phone contacts. Supports iOS and Android.
-version: 0.0.1
+version: 0.0.2
 author: Daniel Martínez <dmartinez@danielmartinez.info>
 homepage: https://github.com/daniochouno/fcontacts
 

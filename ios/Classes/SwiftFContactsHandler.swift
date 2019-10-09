@@ -13,23 +13,23 @@ public class SwiftFContactsHandler {
     static let instance = SwiftFContactsHandler()
 
     @available(iOS 9.0, *)
-    func list( onSuccess: @escaping ([[String:Any]]) -> () ) {
+    func list( query: String? = nil, onSuccess: @escaping ([[String:Any]]) -> () ) {
         let store = CNContactStore()
         if CNContactStore.authorizationStatus(for: .contacts) == .notDetermined {
             store.requestAccess(for: .contacts, completionHandler: { (authorized: Bool, error: Error?) -> Void in
                 if authorized {
-                    let list = self.retrieveContactsWithStore(store: store)
+                    let list = self.retrieveContactsWithStore(store: store, query: query)
                     onSuccess( list )
                 }
             })
         } else if CNContactStore.authorizationStatus(for: .contacts) == .authorized {
-            let list = self.retrieveContactsWithStore(store: store)
+            let list = self.retrieveContactsWithStore(store: store, query: query)
             onSuccess( list )
         }
     }
 
     @available(iOS 9.0, *)
-    private func retrieveContactsWithStore( store: CNContactStore ) -> [[String:Any]] {
+    private func retrieveContactsWithStore( store: CNContactStore, query: String? = nil ) -> [[String:Any]] {
         var list = [FContact]()
         var allContainers = [CNContainer]()
         do {
@@ -85,7 +85,9 @@ public class SwiftFContactsHandler {
                 )
                 for contact in contacts {
                     let model = fromCNContact( contact: contact )
-                    list.append( model )
+                    if (contains( model: model, query: query )) {
+                        list.append( model )
+                    }
                 }
             } catch {
                 print("Exception: Fetching contacts")
@@ -255,6 +257,97 @@ public class SwiftFContactsHandler {
             model.instantMessageAddresses.append( _labeled )
         }
         return model
+    }
+
+    private func contains( model: FContact, query: String? = nil ) -> Bool {
+        guard let query = query else {
+            return true
+        }
+        let _query = query.lowercased()
+        if (model.displayName.lowercased().contains( _query )) {
+            return true
+        }
+        if (model.identifier.lowercased().contains( _query )) {
+            return true
+        }
+        if let _value = model.nickname, (_value.lowercased().contains( _query )) {
+            return true
+        }
+        if let _value = model.jobTitle, (_value.lowercased().contains( _query )) {
+            return true
+        }
+        if let _value = model.departmentName, (_value.lowercased().contains( _query )) {
+            return true
+        }
+        if let _value = model.organizationName, (_value.lowercased().contains( _query )) {
+            return true
+        }
+        for postalAddress in model.postalAddresses {
+            if let _value = postalAddress.valueStreet, (_value.lowercased().contains( _query )) {
+                return true
+            }
+            if let _value = postalAddress.valueCity, (_value.lowercased().contains( _query )) {
+                return true
+            }
+            if let _value = postalAddress.valueSubLocality, (_value.lowercased().contains( _query )) {
+                return true
+            }
+            if let _value = postalAddress.valueSubAdministrativeArea, (_value.lowercased().contains( _query )) {
+                return true
+            }
+            if let _value = postalAddress.valueState, (_value.lowercased().contains( _query )) {
+                return true
+            }
+            if let _value = postalAddress.valuePostalCode, (_value.lowercased().contains( _query )) {
+                return true
+            }
+            if let _value = postalAddress.valueCountry, (_value.lowercased().contains( _query )) {
+                return true
+            }
+        }
+        for email in model.emails {
+            if (email.value.lowercased().contains( _query )) {
+                return true
+            }
+        }
+        for url in model.urls {
+            if (url.value.lowercased().contains( _query )) {
+                return true
+            }
+        }
+        for phoneNumber in model.phoneNumbers {
+            if (phoneNumber.value.lowercased().contains( _query )) {
+                return true
+            }
+        }
+        for socialProfile in model.socialProfiles {
+            if let _value = socialProfile.valueService, (_value.lowercased().contains( _query )) {
+                return true
+            }
+            if let _value = socialProfile.valueUserIdentifier, (_value.lowercased().contains( _query )) {
+                return true
+            }
+            if let _value = socialProfile.valueUsername, (_value.lowercased().contains( _query )) {
+                return true
+            }
+            if let _value = socialProfile.valueUrl, (_value.lowercased().contains( _query )) {
+                return true
+            }
+        }
+        for relation in model.contactRelations {
+            if (relation.value.lowercased().contains( _query )) {
+                return true
+            }
+        }
+        for instantMessageAddress in model.instantMessageAddresses {
+            if let _value = instantMessageAddress.valueService, (_value.lowercased().contains( _query )) {
+                return true
+            }
+            if let _value = instantMessageAddress.valueUsername, (_value.lowercased().contains( _query )) {
+                return true
+            }
+        }
+        return false
     }
 
 }

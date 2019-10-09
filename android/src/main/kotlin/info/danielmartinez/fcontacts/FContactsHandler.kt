@@ -9,6 +9,8 @@ import android.os.Build
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY
 import kotlinx.coroutines.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class FContactsHandler (
     private val contentResolver: ContentResolver,
@@ -24,19 +26,19 @@ class FContactsHandler (
     }
     private val scope = CoroutineScope( Dispatchers.Default + parentJob + exceptionHandler )
 
-    fun list( onSuccess: (contacts: List<Map<String,Any>>) -> Unit ) {
+    fun list( query: String? = null, onSuccess: (contacts: List<Map<String,Any>>) -> Unit ) {
         scope.launch( Dispatchers.Main ) {
-            val items = asyncList()
+            val items = asyncList( query )
             onSuccess( items )
         }
     }
 
-    private suspend fun asyncList() : List<Map<String,Any>> =
+    private suspend fun asyncList( query: String? = null ) : List<Map<String,Any>> =
             scope.async {
-                return@async query()
+                return@async filter( query )
             }.await()
 
-    private fun query() : List<Map<String,Any>> {
+    private fun filter( query: String? = null ) : List<Map<String,Any>> {
         val list = ArrayList<FContact>()
         val result = ArrayList<Map<String,Any>>()
         val resolver : ContentResolver = this.contentResolver
@@ -53,8 +55,10 @@ class FContactsHandler (
             while (cursor.moveToNext()) {
                 val model = fromCursor( cursor )
                 if ((model != null) && (!list.contains( model ))) {
-                    list.add( model )
-                    result.add( model.toMap() )
+                    if (contains( model, query )) {
+                        list.add(model)
+                        result.add(model.toMap())
+                    }
                 }
             }
         }
@@ -444,6 +448,114 @@ class FContactsHandler (
 
         return model
 
+    }
+
+    private fun contains( model: FContact, query: String? = null ) : Boolean {
+        if (query == null) {
+            return true
+        }
+        val locale = Locale.getDefault()
+        val tQuery = query.toLowerCase(locale)
+        val b = (model.displayName?.toLowerCase(locale)?.contains( tQuery ))
+        if ((b != null) && (b)) {
+            return true
+        }
+        if (model.identifier.toLowerCase(locale).contains( tQuery )) {
+            return true
+        }
+        val bNickname = (model.nickname?.toLowerCase(locale)?.contains( tQuery ))
+        if ((bNickname != null) && (bNickname)) {
+            return true
+        }
+        val bJobTitle = (model.jobTitle?.toLowerCase(locale)?.contains( tQuery ))
+        if ((bJobTitle != null) && (bJobTitle)) {
+            return true
+        }
+        val bOrganizationName = (model.organizationName?.toLowerCase(locale)?.contains( tQuery ))
+        if ((bOrganizationName != null) && (bOrganizationName)) {
+            return true
+        }
+        val bNote = (model.note?.toLowerCase(locale)?.contains( tQuery ))
+        if ((bNote != null) && (bNote)) {
+            return true
+        }
+        model.postalAddresses?.forEach {
+            val bStreet = (it.street?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bStreet != null) && (bStreet)) {
+                return true
+            }
+            val bCity = (it.city?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bCity != null) && (bCity)) {
+                return true
+            }
+            val bNeighborhood = (it.neighborhood?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bNeighborhood != null) && (bNeighborhood)) {
+                return true
+            }
+            val bPOBox = (it.pobox?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bPOBox != null) && (bPOBox)) {
+                return true
+            }
+            val bPostcode = (it.postcode?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bPostcode != null) && (bPostcode)) {
+                return true
+            }
+            val bRegion = (it.region?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bRegion != null) && (bRegion)) {
+                return true
+            }
+            val bCountry = (it.country?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bCountry != null) && (bCountry)) {
+                return true
+            }
+        }
+        model.emails?.forEach {
+            val bValue = (it.value?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bValue != null) && (bValue)) {
+                return true
+            }
+        }
+        model.urls?.forEach {
+            val bValue = (it.value?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bValue != null) && (bValue)) {
+                return true
+            }
+        }
+        model.phoneNumbers?.forEach {
+            val bValue = (it.value?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bValue != null) && (bValue)) {
+                return true
+            }
+        }
+        model.socialProfiles?.forEach {
+            val bService = (it.service?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bService != null) && (bService)) {
+                return true
+            }
+            val bUserIdentifier = (it.userIdentifier?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bUserIdentifier != null) && (bUserIdentifier)) {
+                return true
+            }
+            val bUsername = (it.username?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bUsername != null) && (bUsername)) {
+                return true
+            }
+            val bUrl = (it.url?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bUrl != null) && (bUrl)) {
+                return true
+            }
+        }
+        model.instantMessageAddresses?.forEach {
+            val bService = (it.service?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bService != null) && (bService)) {
+                return true
+            }
+            val bUsername = (it.username?.toLowerCase(locale)?.contains( tQuery ))
+            if ((bUsername != null) && (bUsername)) {
+                return true
+            }
+        }
+        return false
     }
 
 }

@@ -23,13 +23,13 @@ class FContactsPlugin (
   override fun onMethodCall(call: MethodCall, result: Result) {
     when {
       call.method == "getPlatformVersion" -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
-      call.method == "list" -> list( result )
+      call.method == "list" -> list( result, call.argument("query") )
       else -> result.notImplemented()
     }
   }
 
-  private fun list( result: Result ) {
-    FContactsHandler( this.contentResolver, this.context ).list { items ->
+  private fun list( result: Result, query: String? = null ) {
+    FContactsHandler( this.contentResolver, this.context ).list (query) { items ->
       result.success( items )
     }
   }

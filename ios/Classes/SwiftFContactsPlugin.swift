@@ -13,19 +13,25 @@ public class SwiftFContactsPlugin: NSObject, FlutterPlugin {
     if (call.method == "getPlatformVersion") {
         result( "iOS " + UIDevice.current.systemVersion )
     } else if (call.method == "list") {
-        list { items in
-            result( items )
+        if let arguments = call.arguments as? [String:String] {
+            list( query: arguments["query"] ) { items in
+                result( items )
+            }
+        } else {
+            list { items in
+                result( items )
+            }
         }
     }
   }
 
-  private func list( onSuccess: @escaping ([[String:Any]]?) -> () ) {
+    private func list( query: String? = nil, onSuccess: @escaping ([[String:Any]]?) -> () ) {
       if #available(iOS 9.0, *) {
-          SwiftFContactsHandler.instance.list { items in
-              onSuccess( items )
-          }
+        SwiftFContactsHandler.instance.list( query: query ) { items in
+          onSuccess( items )
+        }
       } else {
-          onSuccess( nil )
+        onSuccess( nil )
       }
   }
 

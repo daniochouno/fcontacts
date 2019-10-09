@@ -19,6 +19,14 @@ class FContacts {
     return mapped.toList();
   }
 
+  static Future<List<FContact>> list({ query: String }) async {
+    Iterable filtered = await _channel.invokeMethod( "list", <String,dynamic>{
+      'query': query
+    } );
+    var mapped = filtered.map( (item) => FContact.fromMap(item) );
+    return mapped.toList();
+  }
+
 }
 
 class FContact {
@@ -113,7 +121,6 @@ class FContactDateLabeled {
   int year;
   FContactDateLabeled({ this.label, this.day, this.month, this.year });
   static FContactDateLabeled fromMap( Map map ) {
-    print("FContactDateLabeled, map: $map");
     return FContactDateLabeled(
         label: map["label"] as String,
         day: map["day"] as int,

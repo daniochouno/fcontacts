@@ -1,7 +1,7 @@
 package info.danielmartinez.fcontacts
 
 class FContact (
-    private val identifier: String,
+    val identifier: String,
     var displayName : String? = null,
     var contactType : String? = null,
     var namePrefix : String? = null,

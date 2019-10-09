@@ -13,14 +13,18 @@ class FContactsApp extends StatefulWidget {
 
 class _FContactsAppState extends State<FContactsApp> {
 
-  List<FContact> contacts = List();
+  TextEditingController searchController = TextEditingController();
+
+  List<FContact> all = List();
+  List<FContact> filtered = List();
 
   @override
   void initState() {
     super.initState();
     _loadContacts().then( (_list) {
       setState(() {
-        this.contacts = _list;
+        this.all = _list;
+        this.filtered = _list;
       });
     });
   }
@@ -30,23 +34,45 @@ class _FContactsAppState extends State<FContactsApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('My Contacts (${this.contacts.length})'),
+          title: Text('My Contacts (${this.filtered.length})'),
         ),
-        body: ListView.separated(
-          itemCount: this.contacts.length,
-          itemBuilder: (BuildContext context, int index) {
-            final FContact item = this.contacts[index];
-            return ListTile(
-              title: Text( item.displayName ),
-              subtitle: Text( item.identifier ),
-              onTap: () {
-                Navigator.push( context, MaterialPageRoute( builder: (context) => ContactDetailsPage( contact: item ) ) );
-              },
-            );
-          },
-          separatorBuilder: (context, index) {
-            return Divider();
-          },
+        body: Container(
+          child: Column(
+              children: [
+                Padding(
+                    padding: EdgeInsets.all( 8.0 ),
+                    child: TextField(
+                      onChanged: (text) {
+                        filter(text);
+                      },
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        hintText: "Type to search...",
+                        prefixIcon: Icon(Icons.search)
+                      ),
+                    )
+                ),
+                Expanded(
+                    child: ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: this.filtered.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final FContact item = this.filtered[index];
+                          return ListTile(
+                            title: Text( item.displayName ),
+                            subtitle: Text( item.identifier ),
+                            onTap: () {
+                              Navigator.push( context, MaterialPageRoute( builder: (context) => ContactDetailsPage( contact: item ) ) );
+                            },
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return Divider();
+                        }
+                    )
+                )
+              ]
+          )
         ),
       ),
     );
@@ -54,6 +80,19 @@ class _FContactsAppState extends State<FContactsApp> {
 
   Future<List<FContact>> _loadContacts() async {
     return await FContacts.all();
+  }
+
+  void filter( String query ) async {
+    if (query.isNotEmpty) {
+      List<FContact> _filtered = await FContacts.list( query: query );
+      setState(() {
+        this.filtered = _filtered;
+      });
+    } else {
+      setState(() {
+        this.filtered = this.all;
+      });
+    }
   }
 
 }
