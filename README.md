@@ -27,7 +27,7 @@ To use this plugin you must add `fcontacts` as a [dependency in your `pubspec.ya
 
 ```yaml
 dependencies:
-    fcontacts: ^0.0.3
+    fcontacts: ^1.0.0
 ```
 
 ### Example

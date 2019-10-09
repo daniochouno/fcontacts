@@ -1,3 +1,7 @@
+## 1.0.0 (09/10/2019)
+
+* Added API documentation
+
 ## 0.0.3 (09/10/2019)
 
 * Fixed example README
