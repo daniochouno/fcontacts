@@ -16,6 +16,6 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    expect(await Fcontacts.platformVersion, '42');
+    expect(await FContacts.platformVersion, '42');
   });
 }

@@ -19,14 +19,14 @@ class FContact (
     var imageData : ByteArray? = null,
     var thumbnailData : ByteArray? = null,
     var imageDataAvailable : Boolean = false,
-    var dates : List<FContactDateLabeled>? = null,  // TODO
-    var postalAddresses : List<FContactPostalAddressLabeled>? = null,       // TODO
+    var dates : List<FContactDateLabeled>? = null,
+    var postalAddresses : List<FContactPostalAddressLabeled>? = null,
     var emails : List<FContactValueLabeled>? = null,
     var urls : List<FContactValueLabeled>? = null,
     var phoneNumbers : List<FContactValueLabeled>? = null,
     var socialProfiles : List<FContactSocialProfileLabeled>? = null,
     var contactRelations : List<FContactValueLabeled>? = null,
-    var instantMessageAddresses : List<FContactInstantMessageAddressLabeled>? = null    // TODO
+    var instantMessageAddresses : List<FContactInstantMessageAddressLabeled>? = null
 ) : Comparable<FContact> {
 
     override fun compareTo( other: FContact ): Int {
