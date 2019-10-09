@@ -1,95 +1,110 @@
-# fcontacts
-[![pub package](https://img.shields.io/pub/v/fcontacts.svg)](https://pub.dartlang.org/packages/fcontacts)
+# fcontacts_example
 
-A Flutter plugin for accessing to all available data from your phone contacts. Supports iOS and Android.
+This is a code example on how to use this plugin. You can check the files used in our repository.
 
-## Getting Started
-
-In Android, you need to add the **READ_CONTACTS** permission in your AndroidManifest.xml.
-
-```xml
-<uses-permission android:name="android.permission.READ_CONTACTS" />
-```
-
-In iOS, you need to add the key **NSContactsUsageDescription** in your Info.plist file.
-
-```xml
-<key>NSContactsUsageDescription</key>
-<string>We need access to your contacts for this demo</string>
-````
-
-## Usage
-
-### Import package
-
-To use this plugin you must add `fcontacts` as a [dependency in your `pubspec.yaml` file](https://flutter.io/platform-plugins/).
-
-```yaml
-dependencies:
-    fcontacts: ^0.0.1
-```
-
-### Example
+## main.dart
 
 ```dart
+import 'package:flutter/material.dart';
+import 'dart:async';
+
 import 'package:fcontacts/fcontacts.dart';
-````
 
-```dart
-List<FContact> allContacts = await FContacts.all();
-```
+void main() => runApp(FContactsApp());
 
-### FContact model
+class FContactsApp extends StatefulWidget {
+  @override
+  _FContactsAppState createState() => _FContactsAppState();
+}
 
-```dart
-class FContact {
-    String identifier;
-    String displayName;
-    String contactType;
-    String namePrefix;
-    String givenName;
-    String middleName;
-    String familyName;
-    String previousFamilyName;
-    String nameSuffix;
-    String nickname;
-    String phoneticGivenName;
-    String phoneticMiddleName;
-    String phoneticFamilyName;
-    String jobTitle;
-    String departmentName;
-    String organizationName;
-    String phoneticOrganizationName;
-    int birthdayDay;
-    int birthdayMonth;
-    int birthdayYear;
-    String note;
-    Uint8List image;
-    Uint8List thumbnail;
+class _FContactsAppState extends State<FContactsApp> {
 
-    List<FContactDateLabeled> dates = List<FContactDateLabeled>();
-    List<FContactPostalAddressLabeled> postalAddresses = List<FContactPostalAddressLabeled>();
-    List<FContactValueLabeled> emails = List<FContactValueLabeled>();
-    List<FContactValueLabeled> urls = List<FContactValueLabeled>();
-    List<FContactValueLabeled> phoneNumbers = List<FContactValueLabeled>();
-    List<FContactSocialProfileLabeled> socialProfiles = List<FContactSocialProfileLabeled>();
-    List<FContactValueLabeled> contactRelations = List<FContactValueLabeled>();
-    List<FContactInstantMessageAddressLabeled> instantMessageAddresses = List<FContactInstantMessageAddressLabeled>();
+  TextEditingController searchController = TextEditingController();
+
+  List<FContact> all = List();
+  List<FContact> filtered = List();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadContacts().then( (_list) {
+      setState(() {
+        this.all = _list;
+        this.filtered = _list;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('My Contacts (${this.filtered.length})'),
+        ),
+        body: Container(
+          child: Column(
+              children: [
+                Padding(
+                    padding: EdgeInsets.all( 8.0 ),
+                    child: TextField(
+                      onChanged: (text) {
+                        filter(text);
+                      },
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        hintText: "Type to search...",
+                        prefixIcon: Icon(Icons.search)
+                      ),
+                    )
+                ),
+                Expanded(
+                    child: ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: this.filtered.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final FContact item = this.filtered[index];
+                          return ListTile(
+                            title: Text( item.displayName ),
+                            subtitle: Text( item.identifier )
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return Divider();
+                        }
+                    )
+                )
+              ]
+          )
+        ),
+      ),
+    );
+  }
+
+  Future<List<FContact>> _loadContacts() async {
+    return await FContacts.all();
+  }
+
+  void filter( String query ) async {
+    if (query.isNotEmpty) {
+      List<FContact> _filtered = await FContacts.list( query: query );
+      setState(() {
+        this.filtered = _filtered;
+      });
+    } else {
+      setState(() {
+        this.filtered = this.all;
+      });
+    }
+  }
 
 }
+
 ```
-
-### FContactDateLabeled
-
-
-## Limitations
-
-- Only retrieving the list of all contacts is available for now. In future query methods will be available, too.
-- The **Notes** field in iOS is not available for now.
 
 ## Credits
 
-This plugin has been created and developed by [Daniel Martinez](mailto:dmartinez@danielmartinez.info).
+This plugin has been created and developed by [Daniel Martínez](mailto:dmartinez@danielmartinez.info).
 
 Any suggestions and contributions are welcomed.
 Thanks for using this plugin!

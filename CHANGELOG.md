@@ -1,3 +1,7 @@
+## 0.0.3 (09/10/2019)
+
+* Fixed example README
+
 ## 0.0.2 (09/10/2019)
 
 * Added a query method to filter contacts

@@ -6,7 +6,7 @@ A Flutter plugin for accessing to all available data from your phone contacts. S
 
 ## Getting Started
 
-In Android, you need to add the **READ_CONTACTS** permission in your AndroidManifest.xml.  
+In Android, you need to add the **READ_CONTACTS** permission in your AndroidManifest.xml.
 
 ```xml
 <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -27,7 +27,7 @@ To use this plugin you must add `fcontacts` as a [dependency in your `pubspec.ya
 
 ```yaml
 dependencies:
-    fcontacts: ^0.0.2
+    fcontacts: ^0.0.3
 ```
 
 ### Example
