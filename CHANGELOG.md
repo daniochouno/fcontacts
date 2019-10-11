@@ -1,3 +1,8 @@
+## 1.1.0 (11/10/2019)
+
+* #1: Bug fixed
+* Birthday is now included as a FContactDateLabeled inside the 'dates' list in the Contact model
+
 ## 1.0.0 (09/10/2019)
 
 * Added API documentation

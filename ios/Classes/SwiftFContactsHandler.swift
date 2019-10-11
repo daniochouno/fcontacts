@@ -129,25 +129,23 @@ public class SwiftFContactsHandler {
             model.phoneticOrganizationName = (contact.phoneticOrganizationName.count > 0) ? contact.phoneticOrganizationName : nil
         }
         if let birthday = contact.birthday {
-            if let day = birthday.day {
-                model.birthdayDay = day
+            let _labeled = FContactDateLabeled()
+            _labeled.label = "birthday"
+            _labeled.valueDay = birthday.day
+            _labeled.valueMonth = birthday.month
+            if birthday.year != .max {
+                _labeled.valueYear = birthday.year
             }
-            if let month = birthday.month {
-                model.birthdayMonth = month
-            }
-            if let year = birthday.year {
-                model.birthdayYear = year
-            }
+            model.dates.append( _labeled )
         } else if let birthday = contact.nonGregorianBirthday {
-            if let day = birthday.day {
-                model.birthdayDay = day
+            let _labeled = FContactDateLabeled()
+            _labeled.label = "birthday"
+            _labeled.valueDay = birthday.day
+            _labeled.valueMonth = birthday.month
+            if birthday.year != .max {
+                _labeled.valueYear = birthday.year
             }
-            if let month = birthday.month {
-                model.birthdayMonth = month
-            }
-            if let year = birthday.year {
-                model.birthdayYear = year
-            }
+            model.dates.append( _labeled )
         }
         for labeledDate in contact.dates {
             let _labeled = FContactDateLabeled()

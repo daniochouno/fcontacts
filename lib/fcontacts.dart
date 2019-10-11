@@ -45,9 +45,6 @@ class FContact {
   String departmentName; // Only iOS
   String organizationName;
   String phoneticOrganizationName; // Only iOS
-  int birthdayDay;
-  int birthdayMonth;
-  int birthdayYear;
   String note; // Only Android
   Uint8List image;
   Uint8List thumbnail;
@@ -82,9 +79,6 @@ class FContact {
     departmentName = map["departmentName"] ?? null;
     organizationName = map["organizationName"] ?? null;
     phoneticOrganizationName = map["phoneticOrganizationName"] ?? null;
-    birthdayDay = map["birthdayDay"] ?? null;
-    birthdayMonth = map["birthdayMonth"] ?? null;
-    birthdayYear = map["birthdayYear"] ?? null;
     note = map["note"] ?? null;
     image = map["imageData"] ?? null;
     thumbnail = map["thumbnailData"] ?? null;
@@ -136,7 +130,8 @@ class FContactDateLabeled {
         label: map["label"] as String,
         day: map["day"] as int,
         month: map["month"] as int,
-        year: map["year"] as int);
+        year: map["year"] as int
+    );
   }
 }
 

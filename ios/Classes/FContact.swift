@@ -27,9 +27,6 @@ public class FContact : Comparable {
     var departmentName : String?
     var organizationName : String?
     var phoneticOrganizationName : String?
-    var birthdayDay : Int?
-    var birthdayMonth : Int?
-    var birthdayYear : Int?
     var note : String?
     var imageData : Data?
     var thumbnailImageData : Data?
@@ -93,15 +90,6 @@ public class FContact : Comparable {
         }
         if let _phoneticOrganizationName = self.phoneticOrganizationName {
             result[ "phoneticOrganizationName" ] = _phoneticOrganizationName
-        }
-        if let _birthdayDay = self.birthdayDay {
-            result[ "birthdayDay" ] = _birthdayDay
-        }
-        if let _birthdayMonth = self.birthdayMonth {
-            result[ "birthdayMonth" ] = _birthdayMonth
-        }
-        if let _birthdayYear = self.birthdayYear {
-            result[ "birthdayYear" ] = _birthdayYear
         }
         if self.dates.count > 0 {
             var _dates = [[String:Any]]()

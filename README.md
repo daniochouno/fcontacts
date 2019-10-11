@@ -27,7 +27,7 @@ To use this plugin you must add `fcontacts` as a [dependency in your `pubspec.ya
 
 ```yaml
 dependencies:
-    fcontacts: ^1.0.0
+    fcontacts: ^1.1.0
 ```
 
 ### Example
@@ -86,9 +86,6 @@ class FContact {
     String departmentName;                  // Only in iOS
     String organizationName;
     String phoneticOrganizationName;        // Only in iOS
-    int birthdayDay;
-    int birthdayMonth;
-    int birthdayYear;
     String note;                            // Only in Android
     Uint8List image;
     Uint8List thumbnail;

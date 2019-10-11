@@ -3,11 +3,9 @@ package info.danielmartinez.fcontacts
 import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
-import android.database.Cursor.*
 import android.net.Uri
 import android.os.Build
 import android.provider.ContactsContract
-import android.provider.ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -341,26 +339,26 @@ class FContactsHandler (
                     )
                     if (columnIndexStartDate != -1) {
                         val startDate = cursorData.getString(columnIndexStartDate)
-                        val componentDates = startDate.split("-")
+                        val componentDates = startDate.trimStart( '-' ).split("-")
                         var componentDay : Int? = null
                         var componentMonth : Int? = null
                         var componentYear : Int? = null
                         if (componentDates.size == 3) {
-                            componentDay = componentDates[2].toInt()
-                            componentMonth = componentDates[1].toInt()
                             componentYear = componentDates[0].toInt()
+                            componentMonth = componentDates[1].toInt()
+                            componentDay = componentDates[2].toInt()
                         } else if (componentDates.size == 2) {
-                            componentDay = componentDates[1].toInt()
                             componentMonth = componentDates[0].toInt()
+                            componentDay = componentDates[1].toInt()
                         } else if (componentDates.size == 1) {
                             componentDay = componentDates[0].toInt()
                         }
-                        if ((componentDay != null) && (componentMonth != null) && (componentYear != null)) {
-                            if (type == TYPE_BIRTHDAY) {
+                        if ((componentDay != null) || (componentMonth != null) || (componentYear != null)) {
+                            /*if (type == TYPE_BIRTHDAY) {
                                 model.birthdayDay = componentDay
                                 model.birthdayMonth = componentMonth
                                 model.birthdayYear = componentYear
-                            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            } else*/ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                 val formattedLabel = ContactsContract.CommonDataKinds.Event.getTypeLabel(
                                         context.resources,
                                         type,

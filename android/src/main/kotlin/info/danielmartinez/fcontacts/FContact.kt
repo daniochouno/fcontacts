@@ -12,9 +12,6 @@ class FContact (
     var nickname : String? = null,
     var jobTitle : String? = null,
     var organizationName : String? = null,
-    var birthdayDay : Int? = null,
-    var birthdayMonth : Int? = null,
-    var birthdayYear : Int? = null,
     var note : String? = null,
     var imageData : ByteArray? = null,
     var thumbnailData : ByteArray? = null,
@@ -61,15 +58,6 @@ class FContact (
         }
         if (this.organizationName != null) {
             map["organizationName"] = this.organizationName as String
-        }
-        if (this.birthdayDay != null) {
-            map["birthdayDay"] = this.birthdayDay as Int
-        }
-        if (this.birthdayMonth != null) {
-            map["birthdayMonth"] = this.birthdayMonth as Int
-        }
-        if (this.birthdayYear != null) {
-            map["birthdayYear"] = this.birthdayYear as Int
         }
         if (this.nickname != null) {
             map["nickname"] = this.nickname as String
